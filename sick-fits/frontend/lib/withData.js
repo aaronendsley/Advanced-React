@@ -4,6 +4,7 @@ import { getDataFromTree } from '@apollo/react-ssr';
 import { createUploadLink } from 'apollo-upload-client';
 import withApollo from 'next-with-apollo';
 import { endpoint, prodEndpoint } from '../config';
+import paginationField from './paginationField';
 
 function createClient({ headers, initialState }) {
   return new ApolloClient({
@@ -11,14 +12,9 @@ function createClient({ headers, initialState }) {
       onError(({ graphQLErrors, networkError }) => {
         if (graphQLErrors)
           graphQLErrors.forEach(({ message, locations, path }) =>
-            console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-            )
+            console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
           );
-        if (networkError)
-          console.log(
-            `[Network error]: ${networkError}. Backend is unreachable. Is it running?`
-          );
+        if (networkError) console.log(`[Network error]: ${networkError}. Backend is unreachable. Is it running?`);
       }),
       // this uses apollo-link-http under the hood, so all the options here come from that package
       createUploadLink({
@@ -35,7 +31,7 @@ function createClient({ headers, initialState }) {
         Query: {
           fields: {
             // TODO: We will add this together!
-            // allProducts: paginationField(),
+            allProducts: paginationField(),
           },
         },
       },
